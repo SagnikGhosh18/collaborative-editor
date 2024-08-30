@@ -59,3 +59,28 @@ export const getDocument = async ({
     console.log(`Error in room access: ${err}`);
   }
 };
+
+export const updateDocument = async(roomId: string, title: string) => {
+  try{
+    const updatedRoom = await liveblocks.updateRoom(roomId, {
+      metadata: {
+        title
+      }
+    });
+    revalidatePath(`/documents/${roomId}`);
+
+    return parseStringify(updatedRoom);
+  } catch (err){
+    console.log(`Error in updating doc: ${err}`);
+  }
+}
+
+export const getDocuments = async (email:string) => {
+  try {
+    const rooms = await liveblocks.getRooms({ userId: email});
+
+    return parseStringify(rooms);
+  } catch (err) {
+    console.log(`Error in getting rooms: ${err}`);
+  }
+};
