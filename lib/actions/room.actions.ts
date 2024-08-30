@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 import { nanoid } from "nanoid";
 import { liveblocks } from "../liveblocks";
@@ -25,13 +25,37 @@ export const createDocument = async ({
     const room = await liveblocks.createRoom(roomId, {
       metadata,
       usersAccesses,
-      defaultAccesses: ["room:read", "room:presence:write"],
+      defaultAccesses: ["room:write"],
     });
 
-    revalidatePath('/');
+    revalidatePath("/");
 
     return parseStringify(room);
   } catch (e) {
     console.log("Error in creating room");
+  }
+};
+
+export const getDocument = async ({
+  roomId,
+  userId,
+}: {
+  roomId: string;
+  userId: string;
+}) => {
+  try {
+    const room = await liveblocks.getRoom(roomId);
+
+
+    //TODO: Bring back
+    // const hasAccess = Object.keys(room.usersAccesses).includes(userId);
+
+    // if (!hasAccess) {
+    //   throw new Error("You do not have access to the room");
+    // }
+
+    return parseStringify(room);
+  } catch (err) {
+    console.log(`Error in room access: ${err}`);
   }
 };
