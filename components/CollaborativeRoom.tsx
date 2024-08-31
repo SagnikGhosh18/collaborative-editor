@@ -15,8 +15,9 @@ import Loader from "./Loader";
 const CollaborativeRoom = ({
   roomId,
   roomMetadata,
+  users,
+  currentUserType,
 }: CollaborativeRoomProps) => {
-  const currentUserType = "editor";
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [documentTitle, setDocumentTitle] = useState(roomMetadata.title);
@@ -39,24 +40,25 @@ const CollaborativeRoom = ({
   //   }
   // }, [roomId, documentTitle])
 
-  useEffect(()=>{
-    if(editing && inputRef.current){
+  useEffect(() => {
+    if (editing && inputRef.current) {
       inputRef.current.focus();
     }
   }, [editing]);
 
-
-  const updateTitleHandler = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if(e.key === 'Enter') {
+  const updateTitleHandler = async (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
       setLoading(true);
-      try{
-        if(documentTitle !== roomMetadata.title){
+      try {
+        if (documentTitle !== roomMetadata.title) {
           const updatedDocument = await updateDocument(roomId, documentTitle);
-          if(updatedDocument) {
+          if (updatedDocument) {
             setEditing(false);
           }
         }
-      } catch(err){
+      } catch (err) {
         console.log(`Error in saving ${err}`);
       } finally {
         setLoading(false);
@@ -117,7 +119,7 @@ const CollaborativeRoom = ({
               </SignedIn>
             </div>
           </Header>
-          <Editor />
+          <Editor roomId={roomId} currentUserType={currentUserType}/>
         </div>
       </ClientSideSuspense>
     </RoomProvider>
